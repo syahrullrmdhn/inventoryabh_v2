@@ -1,0 +1,16 @@
+/* resources/css/app.css */
+
+/* 1. Import Mulish dari Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700;800&display=swap');
+
+/* 2. Tailwind directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 3. Override base font-family */
+@layer base {
+  html {
+    font-family: 'Mulish', sans-serif;
+  }
+}
