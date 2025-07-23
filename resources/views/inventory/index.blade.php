@@ -90,6 +90,7 @@
               <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Status</th>
               <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Location</th>
               <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Dates</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Note</th>
               <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
@@ -130,6 +131,9 @@
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="text-sm text-gray-300">In: {{ $i->inventory_in_date }}</div>
                 <div class="text-xs text-gray-500">Out: {{ $i->inventory_out_date ?? '-' }}</div>
+              </td>
+                              <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-300">
+                {{ $i->notes }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                 <div class="flex justify-end space-x-2">

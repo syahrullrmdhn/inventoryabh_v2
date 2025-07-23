@@ -44,6 +44,7 @@ class InventoryController extends Controller
             'status'             => 'required|in:Available,Reserved,Out of Stock,In use',
             'inventory_in_date'  => 'nullable|date',
             'inventory_out_date' => 'nullable|date',
+            'notes' => 'nullable|string|max:2000'
         ]);
         $inventory = Inventory::create($data);
         log_activity('Menambahkan inventory', ['id' => $inventory->id, 'name' => $inventory->inventory_name]);
@@ -70,6 +71,7 @@ class InventoryController extends Controller
             'status'             => 'required|in:Available,Reserved,Out of Stock,In use',
             'inventory_in_date'  => 'nullable|date',
             'inventory_out_date' => 'nullable|date',
+            'notes' => 'nullable|string|max:2000'
         ]);
         $inventory->update($data);
         log_activity('Mengupdate inventory', ['id' => $inventory->id, 'name' => $inventory->inventory_name]);

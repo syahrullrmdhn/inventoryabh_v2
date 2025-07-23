@@ -15,7 +15,8 @@ class Inventory extends Model
         'status',
         'stored_at',
         'inventory_in_date',
-        'inventory_out_date'
+        'inventory_out_date',
+        'notes'
     ];
 
     public function modelType()
