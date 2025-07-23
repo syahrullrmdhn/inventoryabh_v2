@@ -56,6 +56,7 @@
           <option value="Available" {{ old('status', $inventory->status) == 'Available' ? 'selected' : '' }}>Available</option>
           <option value="Reserved" {{ old('status', $inventory->status) == 'Reserved' ? 'selected' : '' }}>Reserved</option>
           <option value="Out of Stock" {{ old('status', $inventory->status) == 'Out of Stock' ? 'selected' : '' }}>Out of Stock</option>
+          <option value="In use" {{ old('status', $inventory->status) == 'In use' ? 'selected' : '' }}>In use</option>
         </select>
         @error('status')<p class="text-red-500 text-sm">{{ $message }}</p>@enderror
       </div>
@@ -102,12 +103,15 @@
           @error('inventory_out_date')<p class="text-red-500 text-sm">{{ $message }}</p>@enderror
         </div>
       </div>
-          <div>
+
+      <div>
         <label class="block mb-1 text-gray-300">Notes</label>
-        <input name="notes" value="{{ old('notes') }}"
-               class="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:ring-2 focus:ring-blue-500" />
+        <textarea name="notes" rows="4"
+          class="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:ring-2 focus:ring-blue-500"
+        >{{ old('notes', $inventory->notes) }}</textarea>
         @error('notes')<p class="text-red-500 text-sm">{{ $message }}</p>@enderror
       </div>
+
       <div class="pt-4 flex gap-3">
         <button type="submit"
           class="py-2 px-6 bg-blue-600 rounded-lg text-white font-semibold hover:bg-blue-700 transition">
