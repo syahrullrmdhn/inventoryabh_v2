@@ -1,4 +1,6 @@
 <?php
+// app/Http/Controllers/ModelTypeController.php
+
 namespace App\Http\Controllers;
 
 use App\Models\ModelType;
@@ -8,8 +10,9 @@ class ModelTypeController extends Controller
 {
     public function index()
     {
-        $modelTypes = ModelType::orderBy('name')->paginate(10);
-        return view('model_types.index', compact('modelTypes'));
+        // Ambil paginasi dengan variabel $types
+        $types = ModelType::orderBy('name')->paginate(10);
+        return view('model_types.index', compact('types'));
     }
 
     public function create()
@@ -20,12 +23,16 @@ class ModelTypeController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name'         => 'required|string|max:255',
-            'minimum_stock'=> 'required|integer|min:0'
+            'name'          => 'required|string|max:255',
+            'minimum_stock' => 'required|integer|min:0',
         ]);
-        $mt = ModelType::create($data);
+
+        ModelType::create($data);
         log_activity('Menambahkan model/type', $data);
-        return redirect()->route('model-types.index')->with('success', 'Added!');
+
+        return redirect()
+            ->route('model-types.index')
+            ->with('success', 'Added!');
     }
 
     public function edit(ModelType $modelType)
@@ -36,18 +43,29 @@ class ModelTypeController extends Controller
     public function update(Request $request, ModelType $modelType)
     {
         $data = $request->validate([
-            'name'         => 'required|string|max:255',
-            'minimum_stock'=> 'required|integer|min:0'
+            'name'          => 'required|string|max:255',
+            'minimum_stock' => 'required|integer|min:0',
         ]);
+
         $modelType->update($data);
         log_activity('Mengupdate model/type', $data);
-        return redirect()->route('model-types.index')->with('success', 'Updated!');
+
+        return redirect()
+            ->route('model-types.index')
+            ->with('success', 'Updated!');
     }
 
     public function destroy(ModelType $modelType)
     {
-        log_activity('Menghapus model/type', ['id' => $modelType->id, 'name' => $modelType->name]);
+        log_activity('Menghapus model/type', [
+            'id'   => $modelType->id,
+            'name' => $modelType->name,
+        ]);
+
         $modelType->delete();
-        return redirect()->route('model-types.index')->with('success', 'Deleted!');
+
+        return redirect()
+            ->route('model-types.index')
+            ->with('success', 'Deleted!');
     }
 }
