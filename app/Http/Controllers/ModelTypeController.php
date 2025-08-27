@@ -8,10 +8,18 @@ use Illuminate\Http\Request;
 
 class ModelTypeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Ambil paginasi dengan variabel $types
-        $types = ModelType::orderBy('name')->paginate(10);
+        $types = ModelType::query()
+            ->search(
+                $request->input('q'),
+                $request->input('min_stock'),
+                $request->input('max_stock')
+            )
+            ->orderBy('name')
+            ->paginate(10)
+            ->withQueryString();
+
         return view('model_types.index', compact('types'));
     }
 
