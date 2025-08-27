@@ -23,57 +23,82 @@
         </a>
       </div>
 
-      <!-- Filter Card -->
-      <div class="bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-700">
-        <form class="flex flex-col sm:flex-row gap-3 items-end" method="GET" action="">
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full">
-            <div>
-              <label class="block text-sm font-medium text-gray-300 mb-1">Owner</label>
-              <select name="owner_id" class="w-full rounded-lg bg-gray-700 text-white border border-gray-600 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                <option value="">All Owners</option>
-                @foreach($owners as $o)
-                  <option value="{{ $o->id }}" {{ request('owner_id') == $o->id ? 'selected' : '' }}>
-                    {{ $o->name }}
-                  </option>
-                @endforeach
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-300 mb-1">Warehouse</label>
-              <select name="warehouse_id" class="w-full rounded-lg bg-gray-700 text-white border border-gray-600 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                <option value="">All Warehouses</option>
-                @foreach($warehouses as $w)
-                  <option value="{{ $w->id }}" {{ request('warehouse_id') == $w->id ? 'selected' : '' }}>
-                    {{ $w->name }}
-                  </option>
-                @endforeach
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-300 mb-1">Status</label>
-              <select name="status" class="w-full rounded-lg bg-gray-700 text-white border border-gray-600 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                <option value="">All Status</option>
-                @foreach(['Available', 'Reserved', 'Out of Stock'] as $status)
-                  <option value="{{ $status }}" {{ request('status') == $status ? 'selected' : '' }}>{{ $status }}</option>
-                @endforeach
-              </select>
-            </div>
-          </div>
-          <div class="flex gap-2">
-            <button type="submit"
-              class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition shadow-md hover:shadow-blue-500/30">
-              Apply Filters
-            </button>
-            @if(request('owner_id') || request('warehouse_id') || request('status'))
-            <a href="{{ route('inventory.index') }}"
-               class="px-4 py-2 text-gray-300 hover:text-white rounded-lg border border-gray-600 hover:border-gray-500 transition">
-              Reset
+<!-- Filter Card -->
+<div class="bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-700">
+  <form class="flex flex-col sm:flex-row gap-3 items-end" method="GET" action="">
+    <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 w-full">
+      <div class="sm:col-span-1">
+        <label class="block text-sm font-medium text-gray-300 mb-1">Search</label>
+        <div class="relative">
+          <input type="text" name="q" value="{{ request('q') }}"
+                 placeholder="Cari nama, serial, owner, warehouse..."
+                 class="w-full rounded-lg bg-gray-700 text-white border border-gray-600 px-3 py-2 pr-10 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+          @if(request('q'))
+            <a href="{{ route('inventory.index', array_filter(request()->except('page'))) }}"
+               class="absolute inset-y-0 right-2 flex items-center text-gray-400 hover:text-gray-200"
+               title="Clear search">
+               ✕
             </a>
-            @endif
-          </div>
-        </form>
+          @endif
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-300 mb-1">Owner</label>
+        <select name="owner_id" class="w-full rounded-lg bg-gray-700 text-white border border-gray-600 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+          <option value="">All Owners</option>
+          @foreach($owners as $o)
+            <option value="{{ $o->id }}" {{ request('owner_id') == $o->id ? 'selected' : '' }}>
+              {{ $o->name }}
+            </option>
+          @endforeach
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-300 mb-1">Warehouse</label>
+        <select name="warehouse_id" class="w-full rounded-lg bg-gray-700 text-white border border-gray-600 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+          <option value="">All Warehouses</option>
+          @foreach($warehouses as $w)
+            <option value="{{ $w->id }}" {{ request('warehouse_id') == $w->id ? 'selected' : '' }}>
+              {{ $w->name }}
+            </option>
+          @endforeach
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-300 mb-1">Status</label>
+        <select name="status" class="w-full rounded-lg bg-gray-700 text-white border border-gray-600 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+          <option value="">All Status</option>
+          @foreach(['Available', 'Reserved', 'Out of Stock', 'In use'] as $status)
+            <option value="{{ $status }}" {{ request('status') == $status ? 'selected' : '' }}>{{ $status }}</option>
+          @endforeach
+        </select>
       </div>
     </div>
+
+    <div class="flex gap-2">
+      <button type="submit"
+        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition shadow-md hover:shadow-blue-500/30">
+        Apply Filters
+      </button>
+      @if(request('owner_id') || request('warehouse_id') || request('status') || request('q'))
+        <a href="{{ route('inventory.index') }}"
+           class="px-4 py-2 text-gray-300 hover:text-white rounded-lg border border-gray-600 hover:border-gray-500 transition">
+          Reset
+        </a>
+      @endif
+    </div>
+  </form>
+
+  @if(request('q'))
+    <div class="mt-3 text-sm text-gray-400">
+      Menampilkan hasil untuk: <span class="font-semibold text-gray-200">"{{ request('q') }}"</span>
+    </div>
+  @endif
+</div>
+
 
     <!-- Inventory Table Section -->
     <div class="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden shadow-lg">

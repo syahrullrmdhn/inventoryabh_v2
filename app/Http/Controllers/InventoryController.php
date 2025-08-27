@@ -9,17 +9,20 @@ class InventoryController extends Controller
     public function index(Request $request)
     {
         $modelTypes = \App\Models\ModelType::orderBy('name')->get();
-        $owners = \App\Models\Owner::orderBy('name')->get();
+        $owners     = \App\Models\Owner::orderBy('name')->get();
         $warehouses = \App\Models\Warehouse::orderBy('name')->get();
 
-        $query = Inventory::with(['modelType','owner','warehouse']);
+        $query = Inventory::with(['modelType','owner','warehouse'])
+            ->search($request->input('q')); // ← search keyword
 
         // Filter
-        if ($request->owner_id) $query->where('owner_id', $request->owner_id);
-        if ($request->warehouse_id) $query->where('warehouse_id', $request->warehouse_id);
-        if ($request->status) $query->where('status', $request->status);
+        if ($request->filled('owner_id'))     $query->where('owner_id', $request->owner_id);
+        if ($request->filled('warehouse_id')) $query->where('warehouse_id', $request->warehouse_id);
+        if ($request->filled('status'))       $query->where('status', $request->status);
 
-        $inv = $query->orderBy('inventory_name')->paginate(10);
+        $inv = $query->orderBy('inventory_name')
+                    ->paginate(10)
+                    ->withQueryString(); // ← keep q & filters in pagination links
 
         return view('inventory.index', compact('inv','modelTypes','owners','warehouses'));
     }

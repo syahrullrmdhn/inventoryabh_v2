@@ -31,4 +31,20 @@ class Inventory extends Model
     {
         return $this->belongsTo(Warehouse::class, 'warehouse_id');
     }
+        public function scopeSearch($query, ?string $term)
+    {
+        $term = trim((string) $term);
+        if ($term === '') return $query;
+
+        return $query->where(function ($q) use ($term) {
+            $like = "%{$term}%";
+            $q->where('inventory_name', 'like', $like)
+              ->orWhere('serial_number', 'like', $like)
+              ->orWhere('status', 'like', $like)
+              ->orWhere('notes', 'like', $like)
+              ->orWhereHas('modelType', fn($m) => $m->where('name', 'like', $like))
+              ->orWhereHas('owner', fn($o) => $o->where('name', 'like', $like))
+              ->orWhereHas('warehouse', fn($w) => $w->where('name', 'like', $like));
+        });
+    }
 }
